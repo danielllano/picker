@@ -1,0 +1,28 @@
+<h1>Pickers</h1>
+
+<div style='width: 800px;'>
+  <div id="map_canvas"></div>
+</div>
+
+<script type="text/javascript">
+  function initialize() {
+    var myPosition = new google.maps.LatLng(-34.397, 150.644)
+    var mapOptions = {
+      center: myPosition,
+      zoom: 8,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    var map = new google.maps.Map(document.getElementById("map_canvas"),
+        mapOptions);
+
+    var marker = new google.maps.Marker({
+      position: myPosition,
+      map: map,
+      title: "You Are Here"
+    });
+
+  }
+</script>
+
+<script>initialize()</script>
