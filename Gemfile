@@ -12,11 +12,11 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'bootstrap-sass', '~> 3.3.1'
 gem 'autoprefixer-rails'
+gem 'font-awesome-sass'
 
-
-gem 'spring',        group: :development
 
 group :development, :test do
+  gem 'spring'
   gem 'sqlite3'
 end
 

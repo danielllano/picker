@@ -10,15 +10,81 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
+ *= require font-awesome
  *= require_tree .
  *= require_self
  */
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
+@import url(http://fonts.googleapis.com/css?family=Amaranth:700,400);
+
+
+html {
+  width: 100vw;
+}
+
+body {
+  width: 100vw;
+}
+
+.navbar.navbar-inverse {
+  height: 75px;
+  margin-bottom: 0px;
+  .navbar-brand {
+    font-weight: bold;
+    font-size: 48px;
+    font-family: 'Amaranth', sans-serif;
+  }
+  #bs-example-navbar-collapse-1, .navbar-header {
+    margin-top: 10px;
+  }
+  a {
+    color: #ccc;
+  }
+
+}
+
+.address-box {
+  position: absolute;
+  width: 460px;
+  left: 100px;
+  top: 95px;
+  background: white;
+  border-radius: 8px;
+  padding: 10px 10px 4px;
+  box-shadow: 9px 9px 9px rgba(0,0,0,0.4);
+  .left-inner-addon {
+  position: relative;
+  }
+  .left-inner-addon input {
+      padding-left: 30px;    
+  }
+  .left-inner-addon i {
+      position: absolute;
+      padding: 10px 12px;
+      pointer-events: none;
+      color: #aaa;
+  }
+  .span.glyphicon {
+    text-align: center;
+    display: inline-block;
+  }
+  .address-input {
+    display: inline-block;
+    width: 350px;
+  }
+  #go-btn {
+    margin-bottom: 5px;
+    width: 85px;
+  }
+}
 
 
 #map_canvas { 
-  height: 500px;
-  width: 500px; 
+  height: 100vh;
+  width: 100vw;
 }
+
+
+

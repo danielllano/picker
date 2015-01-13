@@ -1,15 +1,27 @@
-<h1>Pickers</h1>
-
-<div style='width: 800px;'>
+<div class="map-wrapper">
   <div id="map_canvas"></div>
+  <div class="address-box">
+    <div class="form-group left-inner-addon">
+      <i class="glyphicon glyphicon-map-marker"></i>
+      <input type="text" class="form-control address-input" id="OriginInput" placeholder="Pick up address">
+      <button class="btn btn-default address-btn" type="submit"><span class="glyphicon glyphicon-screenshot"></span></button>
+      <button class="btn btn-default address-btn" type="submit"><span class="glyphicon glyphicon-star"></span></button>
+    </div>
+    <div class="form-group left-inner-addon">
+      <i class="glyphicon glyphicon-map-marker"></i>
+      <input type="text" class="form-control address-input" id="DestinationInput" placeholder="Destination address">
+      <button class="btn btn-default address-btn" type="submit"><span class="glyphicon glyphicon-star"></span></button>
+    </div>
+    <button type="Go" class="btn btn-primary pull-right" id="go-btn">Go</button>
+  </div>
 </div>
 
 <script type="text/javascript">
   function initialize() {
-    var myPosition = new google.maps.LatLng(-34.397, 150.644)
+    var myPosition = new google.maps.LatLng(6.2087601, -75.5707247)
     var mapOptions = {
       center: myPosition,
-      zoom: 8,
+      zoom: 15,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
@@ -26,3 +38,4 @@
 </script>
 
 <script>initialize()</script>
+
