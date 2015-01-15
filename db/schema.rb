@@ -11,7 +11,47 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150115164711) do
+ActiveRecord::Schema.define(version: 20150115210216) do
+
+  create_table "car_brands", force: true do |t|
+    t.string   "brand"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "car_models", force: true do |t|
+    t.string   "car_model"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "cities", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "companies", force: true do |t|
+    t.string   "name"
+    t.string   "nit"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "companies", ["nit"], name: "index_companies_on_nit", unique: true
+
+  create_table "locations", force: true do |t|
+    t.integer  "city_id"
+    t.string   "address"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "locations", ["city_id"], name: "index_locations_on_city_id"
+  add_index "locations", ["user_id"], name: "index_locations_on_user_id"
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -31,5 +71,26 @@ ActiveRecord::Schema.define(version: 20150115164711) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+
+  create_table "users_vehicles", id: false, force: true do |t|
+    t.integer "user_id",    null: false
+    t.integer "vehicle_id", null: false
+  end
+
+  add_index "users_vehicles", ["user_id"], name: "index_users_vehicles_on_user_id"
+  add_index "users_vehicles", ["vehicle_id"], name: "index_users_vehicles_on_vehicle_id"
+
+  create_table "vehicles", force: true do |t|
+    t.string   "plate"
+    t.integer  "brand_id"
+    t.integer  "car_model_id"
+    t.string   "color"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "vehicles", ["brand_id"], name: "index_vehicles_on_brand_id"
+  add_index "vehicles", ["car_model_id"], name: "index_vehicles_on_car_model_id"
+  add_index "vehicles", ["plate"], name: "index_vehicles_on_plate", unique: true
 
 end
