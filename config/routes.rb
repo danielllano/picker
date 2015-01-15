@@ -1,12 +1,19 @@
 Rails.application.routes.draw do
 
+  resources :pickers
+
   resources :locations
 
   resources :vehicles
 
+  resources :car_brands do
+    resources :car_models
+  end
+
   resources :companies
 
   devise_for :users
+  
   get 'start' => 'home#start'
   root 'home#welcome'
 
