@@ -26,6 +26,7 @@ html {
 
 body {
   width: 100vw;
+  padding-bottom: 40px;
 }
 
 .navbar.navbar-inverse {
@@ -84,6 +85,19 @@ body {
 #map_canvas { 
   height: 100vh;
   width: 100vw;
+}
+
+
+.user-form {
+  background: rgba(0, 0, 0, 0.6);
+  margin-top: 12%;
+  border-radius: 12px;
+  padding: 15px;
+  color: white;
+  .dev-form-title {
+    text-align: center;
+    font-family: 'Amaranth', sans-serif;
+  }
 }
 
 

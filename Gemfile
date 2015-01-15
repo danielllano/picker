@@ -14,6 +14,7 @@ gem 'bootstrap-sass', '~> 3.3.1'
 gem 'autoprefixer-rails'
 gem 'font-awesome-sass'
 gem 'geocoder'
+gem 'devise'
 
 
 group :development, :test do

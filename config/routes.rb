@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  devise_for :users
   get 'start' => 'home#start'
   root 'home#welcome'
 
