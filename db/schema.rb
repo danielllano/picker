@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150115221807) do
+ActiveRecord::Schema.define(version: 20150116193123) do
 
   create_table "car_brands", force: true do |t|
     t.string   "brand"
@@ -95,14 +95,14 @@ ActiveRecord::Schema.define(version: 20150115221807) do
 
   create_table "vehicles", force: true do |t|
     t.string   "plate"
-    t.integer  "brand_id"
     t.integer  "car_model_id"
     t.string   "color"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "car_brand_id"
   end
 
-  add_index "vehicles", ["brand_id"], name: "index_vehicles_on_brand_id"
+  add_index "vehicles", ["car_brand_id"], name: "index_vehicles_on_car_brand_id"
   add_index "vehicles", ["car_model_id"], name: "index_vehicles_on_car_model_id"
   add_index "vehicles", ["plate"], name: "index_vehicles_on_plate", unique: true
 

@@ -15,6 +15,9 @@ Rails.application.routes.draw do
   devise_for :users
   
   get 'start' => 'home#start'
+
+  get 'profiles/:id' => 'profiles#show', as: :profile
+  
   root 'home#welcome'
 
   # The priority is based upon order of creation: first created -> highest priority.
