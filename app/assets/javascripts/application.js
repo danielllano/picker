@@ -21,9 +21,12 @@ var map;
 var infowindow = new google.maps.InfoWindow();
 var marker;
 var mapOptions;
-var directionsDisplay;
+var directionsDisplay = new google.maps.DirectionsRenderer();
 var directionsService = new google.maps.DirectionsService();
-
+var myPos;
+var usingCp = false;
+var pos1;
+var pos2;
 
 function initialize() {
 
@@ -32,7 +35,7 @@ function initialize() {
   // var anyPosition = new google.maps.LatLng(6.2087601, -75.5707247)
   mapOptions = {
     // center: anyPosition,
-    zoom: 18,
+    zoom: 15,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
 
@@ -42,7 +45,7 @@ function initialize() {
   // Try HTML5 geolocation
   if(navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
-      var myPos = new google.maps.LatLng(position.coords.latitude,
+      myPos = new google.maps.LatLng(position.coords.latitude,
                                        position.coords.longitude);
 
       marker = new google.maps.Marker({
@@ -107,7 +110,11 @@ function initialize() {
       bounds.extend(place.geometry.location);
     }
 
+    
+    pos1 = markers[0].position;
+
     map.fitBounds(bounds);
+    map.setZoom(18);
   });
   // [END region_getplaces]
 
@@ -117,10 +124,6 @@ function initialize() {
     var bounds = map.getBounds();
     searchBox.setBounds(bounds);
   });
-
-
-
-
 
 
   var input2 = (document.getElementById('destination-input'));
@@ -162,7 +165,9 @@ function initialize() {
       bounds.extend(place.geometry.location);
     }
 
-    map.fitBounds(bounds);
+    pos2 = markers[0].position;
+
+    //map.fitBounds(bounds);
   });
   
   google.maps.event.addListener(map, 'bounds_changed', function() {
@@ -194,39 +199,26 @@ function handleNoGeolocation(errorFlag) {
 
 
 
-function calcRoute() {
-  var start = document.getElementById('origin-input').value;
-  var end = document.getElementById('destination-input').value;
-  var request = {
-      origin:start,
-      destination:end,
-      travelMode: google.maps.TravelMode.DRIVING
-  };
-  directionsService.route(request, function(response, status) {
-    if (status == google.maps.DirectionsStatus.OK) {
-      directionsDisplay.setDirections(response);
-    }
-  });
-}
+
 
 $(document).on("page:change", function(){
 
-  $("#set-cp").click(function() {
+  $("#set-cp").click(function(e) {
+    e.preventDefault();
 
     if(navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
-      var myPos = new google.maps.LatLng(position.coords.latitude,
+      myPos = new google.maps.LatLng(position.coords.latitude,
                                        position.coords.longitude);
 
-
       map.setCenter(myPos);
+      usingCp = true;
 
       geocoder.geocode({'latLng': myPos}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           if (results[0]) {
             $('#origin-input').val(results[0].formatted_address);
             map.setZoom(18);
-            
             infowindow.setContent(results[0].formatted_address);
             infowindow.open(map, marker);
           } else {
@@ -244,7 +236,38 @@ $(document).on("page:change", function(){
       handleNoGeolocation(false);
     }
   });
-})
 
-google.maps.event.addDomListener(window, 'load', initialize);
+  $('.address-input').blur(function() {
+    // e.preventDefault();
+    $('.calcs').empty();
+    if (usingCp) {
+      var start = myPos;
+    }else {
+      var start = pos1;
+    }
+    var end = pos2;
+    var request = {
+        origin:start,
+        destination:end,
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.METRIC,
+        region: "CO"
+    };
+    console.log(request);
+    directionsDisplay.setMap(map);
+    directionsService.route(request, function(response, status) {
+      console.log(response);
+      if (status == google.maps.DirectionsStatus.OK) {
+        directionsDisplay.setDirections(response);
+        var distance = response.routes[0].legs[0].distance.text;
+        $('.calcs').append('<div class="calcs"><hr><h5>Distance: 5.6 Km | Cost: $20.000</h5><button type="button" class="btn btn-primary pull-right" id="find-btn">Find me a Picker</button></div>');
+      }
+    });
+  });
+
+  $('.calcs').on('click', '#find-btn', function(){
+    
+  });
+
+});
 

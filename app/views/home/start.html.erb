@@ -10,18 +10,21 @@
       <div class="form-group left-inner-addon">
         <i class="glyphicon glyphicon-map-marker"></i>
         
-        <input type="text" class="form-control address-input controls" id="origin-input" placeholder="Pick up address" onchange:"calcRoute();">
+        <input type="text" class="form-control address-input controls" id="origin-input" placeholder="Pick up address">
         <button class="btn btn-default address-btn" id="set-cp"><span class="glyphicon glyphicon-screenshot"></span></button>
-        <button class="btn btn-default address-btn" type="submit"><span class="glyphicon glyphicon-star"></span></button>
+        <button class="btn btn-default address-btn" type="button"><span class="glyphicon glyphicon-star"></span></button>
       </div>
       <div class="form-group left-inner-addon">
         <i class="glyphicon glyphicon-map-marker"></i>
-        <input type="text" class="form-control address-input controls" id="destination-input" placeholder="Destination address" onchange="calcRoute();">
-        <button class="btn btn-default address-btn" type="submit"><span class="glyphicon glyphicon-star"></span></button>
+        <input type="text" class="form-control address-input controls" id="destination-input" placeholder="Destination address">
+        <button class="btn btn-default address-btn" type="button"><span class="glyphicon glyphicon-star"></span></button>
       </div>
-      <p>Multiple destinations? <a href="#"><span class="glyphicon glyphicon-plus"></span>Add destination</a></p>
-      <hr>
-      <%= f.submit 'Go', class: 'btn btn-primary pull-right', id:"go-btn" %>
+      <!-- <p>Multiple destinations? <a href="#"><span class="glyphicon glyphicon-plus"></span>Add destination</a></p> -->
+      <div class="calcs">
+        <!-- <hr>
+        <h5>Distance: 5.6 Km | Cost: $20.000</h5>
+        <button type="button" class="btn btn-primary pull-right" id="find-btn">Find me a Picker</button> -->
+      </div>
     <% end %>
   </div>
 </div>
