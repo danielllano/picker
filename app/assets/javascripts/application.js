@@ -27,6 +27,10 @@ var myPos;
 var usingCp = false;
 var pos1;
 var pos2;
+var originLat;
+var originLng;
+var destLat;
+var destLng;
 
 function initialize() {
 
@@ -47,6 +51,9 @@ function initialize() {
     navigator.geolocation.getCurrentPosition(function(position) {
       myPos = new google.maps.LatLng(position.coords.latitude,
                                        position.coords.longitude);
+
+      originLat = position.coords.latitude;
+      originLng = position.coords.longitude;
 
       marker = new google.maps.Marker({
         position: myPos,
@@ -166,6 +173,8 @@ function initialize() {
     }
 
     pos2 = markers[0].position;
+    destLat = pos2.k;
+    destLng = pos2.D;
 
     //map.fitBounds(bounds);
   });
@@ -259,14 +268,21 @@ $(document).on("page:change", function(){
       console.log(response);
       if (status == google.maps.DirectionsStatus.OK) {
         directionsDisplay.setDirections(response);
-        var distance = response.routes[0].legs[0].distance.text;
-        $('.calcs').append('<div class="calcs"><hr><h5>Distance: 5.6 Km | Cost: $20.000</h5><button type="button" class="btn btn-primary pull-right" id="find-btn">Find me a Picker</button></div>');
+        var distance = response.routes[0].legs[0].distance
+        var disText = distance.text;
+        var cost = distance.value * 2;
+        $('.calcs').append('<div class="calcs"><hr><h5>Distance: '+disText+' | Cost: $'+cost+'</h5><button type="button" class="btn btn-primary pull-right" id="find-btn">Find me a Picker</button></div>');
       }
     });
   });
 
   $('.calcs').on('click', '#find-btn', function(){
-    
+    console.log(originLat);
+    console.log(originLng);
+    console.log(destLat);
+    console.log(destLng);
+    $.post("/start", { originLat:originLat, originLng:originLng, destLat:destLat, destLng:destLng }, function(){ console.log("done") })
+      
   });
 
 });

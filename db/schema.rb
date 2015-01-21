@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150116193123) do
+ActiveRecord::Schema.define(version: 20150121215538) do
 
   create_table "car_brands", force: true do |t|
     t.string   "brand"
@@ -65,6 +65,18 @@ ActiveRecord::Schema.define(version: 20150116193123) do
 
   add_index "pickers", ["company_id"], name: "index_pickers_on_company_id"
   add_index "pickers", ["user_id"], name: "index_pickers_on_user_id"
+
+  create_table "trips", force: true do |t|
+    t.integer  "user_id"
+    t.float    "origin_lat"
+    t.float    "origin_lng"
+    t.float    "dest_lat"
+    t.float    "dest_lng"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "trips", ["user_id"], name: "index_trips_on_user_id"
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

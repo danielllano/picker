@@ -16,6 +16,8 @@ Rails.application.routes.draw do
   
   get 'start' => 'home#start'
 
+  post 'start' => 'home#find'
+
   get 'profiles/:id' => 'profiles#show', as: :profile
   
   root 'home#welcome'
