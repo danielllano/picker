@@ -227,34 +227,34 @@ function showService(service) {
   var marker = addMarker(servPosA);
 
   google.maps.event.addListener(marker, 'click', function() {
-    // map.setZoom(16);
+
     map.setCenter(marker.getPosition());
-    // if (window.confirm("Take this Picking service?")) {
+    clearMarkers();
+    marker.setMap(map);
+    var start = servPosA;
+    var end = servPosB;
+    var request = {
+      origin:start,
+      destination:end,
+      travelMode: google.maps.TravelMode.DRIVING,
+      unitSystem: google.maps.UnitSystem.METRIC,
+      region: "CO"
+    };
+    directionsDisplay.setMap(map);
+    directionsService.route(request, function(response, status) {
+      console.log(response);
+      if (status == google.maps.DirectionsStatus.OK) {
+        directionsDisplay.setDirections(response);
+        var distance = response.routes[0].legs[0].distance
+        var disText = distance.text;
+        var cost = distance.value * 2;
+        $('.address-box').removeClass('hide').addClass('show');
+        $('.calcs').empty().append('<h5>Distance: '+disText+' | Cost: $'+cost+'</h5><button type="button" class="btn btn-primary pull-right" id="take-service">Take Service</button><button type="button" class="btn btn-default pull-right" id="cancel-service">Cancel</button>');
+      }
+    });
+    $('.calcs').on('click', '#take-service', function(){
       $.post("/take_service", { trip_id: service.trip_id }, function(){ console.log("done") });
-      clearMarkers();
-      marker.setMap(map);
-      var start = servPosA;
-      var end = servPosB;
-      var request = {
-        origin:start,
-        destination:end,
-        travelMode: google.maps.TravelMode.DRIVING,
-        unitSystem: google.maps.UnitSystem.METRIC,
-        region: "CO"
-      };
-      directionsDisplay.setMap(map);
-      directionsService.route(request, function(response, status) {
-        console.log(response);
-        if (status == google.maps.DirectionsStatus.OK) {
-          directionsDisplay.setDirections(response);
-          var distance = response.routes[0].legs[0].distance
-          var disText = distance.text;
-          var cost = distance.value * 2;
-          $('.address-box').removeClass('hide').addClass('show');
-          $('.calcs').empty().append('<h5>Distance: '+disText+' | Cost: $'+cost+'</h5><button type="button" class="btn btn-primary pull-right" id="take-service">Take Service</button><button type="button" class="btn btn-default pull-right" id="cancel-service">Cancel</button>');
-        }
-      });
-    // }
+    });
   });
 }
 
@@ -378,9 +378,7 @@ $(document).on("page:change", function(){
     $.post("/start", { originLat:originLat, originLng:originLng, destLat:destLat, destLng:destLng }, function(){ console.log("done") })
   });
 
-  $('.calcs').on('click', '#take-service', function(){
-    $.post("/take_service", { trip_id: service.trip_id }, function(){ console.log("done") });
-  });
+  
 
   $('.calcs').on('click', '#cancel-service', function(){
     directionsDisplay.setMap(null);

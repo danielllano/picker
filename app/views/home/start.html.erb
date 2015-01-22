@@ -2,6 +2,7 @@
   <div id="map_canvas">
   </div>
   <% if current_user.picker.nil? %>
+    
     <div class="address-box">
       <!-- <div class="form-group">
         <%#= f.collection_select(:city_id , @cities, :id, :name, {:prompt => false}, options = {class:"form-control"}) %>
@@ -22,13 +23,14 @@
       <!-- <p>Multiple destinations? <a href="#"><span class="glyphicon glyphicon-plus"></span>Add destination</a></p> -->
       <div class="calcs">
         <!-- <hr>
-        <h5>Distance: 5.6 Km | Cost: $20.000</h5>
+        <h5>Distance: xxx Km | Cost: $xxx </h5>
         <button type="button" class="btn btn-primary pull-right" id="find-btn">Find me a Picker</button> -->
       </div>
     </div>
   <% else %>
     <div class="address-box hide">
       <div class="calcs">
+        <!-- <h5>Distance: '+disText+' | Cost: $'+cost+'</h5><button type="button" class="btn btn-primary pull-right" id="take-service">Take Service</button><button type="button" class="btn btn-default pull-right" id="cancel-service">Cancel</button> -->
       </div>
     </div>
   <% end %>

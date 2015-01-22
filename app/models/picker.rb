@@ -12,4 +12,5 @@
 class Picker < ActiveRecord::Base
   belongs_to :user
   belongs_to :company
+  has_many :trips
 end

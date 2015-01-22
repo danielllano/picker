@@ -5,7 +5,7 @@ class HomeController < ApplicationController
     if current_user.picker.nil?
       @cities = City.all
     else
-      @trips = Trip.all.map { |trip| { trip_id: trip.id, origin_lat: trip.origin_lat, origin_lng: trip.origin_lng, dest_lat: trip.dest_lat, dest_lng: trip.dest_lng }  }
+      @trips = Trip.where(taken: false).map { |trip| { trip_id: trip.id, origin_lat: trip.origin_lat, origin_lng: trip.origin_lng, dest_lat: trip.dest_lat, dest_lng: trip.dest_lng }  }
     end 
   end
 
@@ -14,6 +14,7 @@ class HomeController < ApplicationController
 
   def find
     @trip = Trip.new
+    @trip.user_id = current_user.id
     @trip.origin_lat = params[:originLat]
     @trip.origin_lng = params[:originLng]
     @trip.dest_lat = params[:destLat]
@@ -24,6 +25,7 @@ class HomeController < ApplicationController
   def take_service
     @trip = Trip.find(params[:trip_id])
     @trip.taken = true
+    @trip.picker_id = current_user.picker.id
     @trip.save
   end
 
