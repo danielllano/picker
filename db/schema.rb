@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150121215538) do
+ActiveRecord::Schema.define(version: 20150122024250) do
 
   create_table "car_brands", force: true do |t|
     t.string   "brand"
@@ -74,6 +74,7 @@ ActiveRecord::Schema.define(version: 20150121215538) do
     t.float    "dest_lng"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "taken",      default: false
   end
 
   add_index "trips", ["user_id"], name: "index_trips_on_user_id"

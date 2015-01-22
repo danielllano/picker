@@ -1,7 +1,12 @@
 class HomeController < ApplicationController
+  before_action :authenticate_user!, except: :welcome
 
   def start
-    @cities = City.all
+    if current_user.picker.nil?
+      @cities = City.all
+    else
+      @trips = Trip.all.map { |trip| { trip_id: trip.id, origin_lat: trip.origin_lat, origin_lng: trip.origin_lng, dest_lat: trip.dest_lat, dest_lng: trip.dest_lng }  }
+    end 
   end
 
   def welcome
@@ -14,7 +19,13 @@ class HomeController < ApplicationController
     @trip.dest_lat = params[:destLat]
     @trip.dest_lng = params[:destLng]
     @trip.save
-  end  
+  end
+
+  def take_service
+    @trip = Trip.find(params[:trip_id])
+    @trip.taken = true
+    @trip.save
+  end
 
   private
 

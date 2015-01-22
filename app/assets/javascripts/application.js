@@ -19,7 +19,7 @@
 var geocoder;
 var map;
 var infowindow = new google.maps.InfoWindow();
-var marker;
+var myMarker;
 var mapOptions;
 var directionsDisplay = new google.maps.DirectionsRenderer();
 var directionsService = new google.maps.DirectionsService();
@@ -31,11 +31,12 @@ var originLat;
 var originLng;
 var destLat;
 var destLng;
+var markers = [];
 
 function initialize() {
 
   geocoder = new google.maps.Geocoder();
-  var markers = [];
+  
   // var anyPosition = new google.maps.LatLng(6.2087601, -75.5707247)
   mapOptions = {
     // center: anyPosition,
@@ -52,16 +53,21 @@ function initialize() {
       myPos = new google.maps.LatLng(position.coords.latitude,
                                        position.coords.longitude);
 
-      originLat = position.coords.latitude;
-      originLng = position.coords.longitude;
+      var pinColor = "0000FF"
+      var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
+          new google.maps.Size(21, 34),
+          new google.maps.Point(0,0),
+          new google.maps.Point(10, 34));
 
-      marker = new google.maps.Marker({
+      myMarker = new google.maps.Marker({
         position: myPos,
         map: map,
-        title: "You are here"
+        title: "You are here",
+        icon: pinImage
       }); 
 
       map.setCenter(myPos);
+      console.log(myPos);
 
     }, function() {
       handleNoGeolocation(true);
@@ -70,11 +76,12 @@ function initialize() {
     // Browser doesn't support Geolocation
     handleNoGeolocation(false);
   }
+}
 
+function setDirections() {
 
   var input = /** @type {HTMLInputElement} */(
       document.getElementById('origin-input'));
-
 
   var searchBox = new google.maps.places.SearchBox(
     /** @type {HTMLInputElement} */(input));
@@ -173,8 +180,6 @@ function initialize() {
     }
 
     pos2 = markers[0].position;
-    destLat = pos2.k;
-    destLng = pos2.D;
 
     //map.fitBounds(bounds);
   });
@@ -183,8 +188,9 @@ function initialize() {
     var bounds = map.getBounds();
     searchBox.setBounds(bounds);
   });
-
 }
+
+
 
 function handleNoGeolocation(errorFlag) {
   if (errorFlag) {
@@ -206,8 +212,81 @@ function handleNoGeolocation(errorFlag) {
 // function currentLocation() {
 // }
 
+function showServices(services) {
+  markers = [];
+  for (var i = 0; i < services.length; i++) {
+    var service = services[i];
+    showService(service);
+    
+  }
+}
+
+function showService(service) {
+  var servPosA = new google.maps.LatLng(service.origin_lat, service.origin_lng);
+  var servPosB = new google.maps.LatLng(service.dest_lat, service.dest_lng);
+  var marker = addMarker(servPosA);
+
+  google.maps.event.addListener(marker, 'click', function() {
+    // map.setZoom(16);
+    map.setCenter(marker.getPosition());
+    // if (window.confirm("Take this Picking service?")) {
+      $.post("/take_service", { trip_id: service.trip_id }, function(){ console.log("done") });
+      clearMarkers();
+      marker.setMap(map);
+      var start = servPosA;
+      var end = servPosB;
+      var request = {
+        origin:start,
+        destination:end,
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.METRIC,
+        region: "CO"
+      };
+      directionsDisplay.setMap(map);
+      directionsService.route(request, function(response, status) {
+        console.log(response);
+        if (status == google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(response);
+          var distance = response.routes[0].legs[0].distance
+          var disText = distance.text;
+          var cost = distance.value * 2;
+          $('.address-box').removeClass('hide').addClass('show');
+          $('.calcs').empty().append('<h5>Distance: '+disText+' | Cost: $'+cost+'</h5><button type="button" class="btn btn-primary pull-right" id="take-service">Take Service</button><button type="button" class="btn btn-default pull-right" id="cancel-service">Cancel</button>');
+        }
+      });
+    // }
+  });
+}
 
 
+function addMarker(location) {
+  var marker = new google.maps.Marker({
+    map: map,
+    position: location,
+    animation: google.maps.Animation.DROP,
+  });
+  markers.push(marker);
+  return marker;
+}
+
+function setAllMap(map) {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
+  }
+}
+
+function clearMarkers() {
+  setAllMap(null);
+}
+
+function showMarkers() {
+  setAllMap(map);
+}
+
+function deleteMarkers() {
+  clearMarkers();
+  markers = [];
+}
 
 
 $(document).on("page:change", function(){
@@ -246,15 +325,32 @@ $(document).on("page:change", function(){
     }
   });
 
-  $('.address-input').blur(function() {
+  
+  $('#origin-input').on('keyup', function() {
+    usingCp = false;
+  });
+
+
+  $('.address-input').on('input', function() {
     // e.preventDefault();
     $('.calcs').empty();
+    $('.calcs').append('<button type="button" class="btn btn-primary pull-right" id="calc-btn">Calculate</button>');  
+  });
+
+
+  $('.calcs').on('click', '#calc-btn', function(){
     if (usingCp) {
       var start = myPos;
+      originLat = myPos.k;
+      originLng = myPos.D;
     }else {
       var start = pos1;
+      originLat = pos1.k;
+      originLng = pos1.D;
     }
     var end = pos2;
+    destLat = pos2.k;
+    destLng = pos2.D;
     var request = {
         origin:start,
         destination:end,
@@ -271,18 +367,28 @@ $(document).on("page:change", function(){
         var distance = response.routes[0].legs[0].distance
         var disText = distance.text;
         var cost = distance.value * 2;
-        $('.calcs').append('<div class="calcs"><hr><h5>Distance: '+disText+' | Cost: $'+cost+'</h5><button type="button" class="btn btn-primary pull-right" id="find-btn">Find me a Picker</button></div>');
+        $('.calcs').empty();
+        $('.calcs').append('<hr><h5>Distance: '+disText+' | Cost: $'+cost+'</h5><button type="button" class="btn btn-primary pull-right" id="find-btn">Find me a Picker</button>');
       }
     });
   });
 
+
   $('.calcs').on('click', '#find-btn', function(){
-    console.log(originLat);
-    console.log(originLng);
-    console.log(destLat);
-    console.log(destLng);
     $.post("/start", { originLat:originLat, originLng:originLng, destLat:destLat, destLng:destLng }, function(){ console.log("done") })
-      
+  });
+
+  $('.calcs').on('click', '#take-service', function(){
+    $.post("/take_service", { trip_id: service.trip_id }, function(){ console.log("done") });
+  });
+
+  $('.calcs').on('click', '#cancel-service', function(){
+    directionsDisplay.setMap(null);
+    map.setZoom(15);
+    clearMarkers();
+    showServices(services);
+    map.setCenter(myPos);
+    $('.address-box').removeClass('show').addClass('hide');
   });
 
 });
