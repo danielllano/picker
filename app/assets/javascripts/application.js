@@ -16,8 +16,7 @@
 //= require turbolinks
 //= require_tree .
 
-var pusher = new Pusher('1f87a37925b6e3e22e89');
-var channel = pusher.subscribe('active_trips');
+
 var geocoder;
 var map;
 var infowindow = new google.maps.InfoWindow();
@@ -118,7 +117,8 @@ function setDirections() {
         map: map,
         icon: image,
         title: place.name,
-        position: place.geometry.location
+        position: place.geometry.location,
+        draggable:true
       });
 
       markers.push(marker);
@@ -173,7 +173,8 @@ function setDirections() {
         map: map,
         icon: image,
         title: place.name,
-        position: place.geometry.location
+        position: place.geometry.location,
+        draggable:true
       });
 
       markers.push(marker);
@@ -227,7 +228,8 @@ function showServices(services) {
 function showService(service) {
   var servPosA = new google.maps.LatLng(service.origin_lat, service.origin_lng);
   var servPosB = new google.maps.LatLng(service.dest_lat, service.dest_lng);
-  var marker = addMarker(servPosA);
+  var servIndex = service.trip_id;
+  var marker = addMarker(servIndex,servPosA);
 
   google.maps.event.addListener(marker, 'click', function() {
 
@@ -262,20 +264,32 @@ function showService(service) {
 }
 
 
-function addMarker(location) {
+function addMarker(index, location) {
   var marker = new google.maps.Marker({
     map: map,
     position: location,
     animation: google.maps.Animation.DROP,
   });
-  markers.push(marker);
+  markers.push([index,marker]);
   return marker;
 }
 
 function setAllMap(map) {
   for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(map);
+    markers[i][1].setMap(map);
   }
+}
+
+function setMarkerMap(location, map){
+  for (var i = 0; i < markers.length; i++) {
+    if (markers[i][0] == location.trip_id) {
+      markers[i][1].setMap(map);
+    }
+  }
+}
+
+function clearOneMarker(location) {
+  setMarkerMap(location, null);
 }
 
 function clearMarkers() {
@@ -289,6 +303,15 @@ function showMarkers() {
 function deleteMarkers() {
   clearMarkers();
   markers = [];
+}
+
+function deleteOneMarker(location){
+  clearOneMarker(location);
+  for (var i = 0; i < markers.length; i++){
+    if (markers[i][0] == location.trip_id) {
+      markers.splice(i, 1);
+    }
+  }
 }
 
 
@@ -393,8 +416,4 @@ $(document).on("page:change", function(){
   });
 });
 
-channel.bind('trips-change', function(trip) {
-  console.log('Real time');
-  showService(trip);
-});
 

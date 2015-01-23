@@ -20,7 +20,13 @@ Rails.application.routes.draw do
 
   get 'cancel_trip' => 'home#cancel_trip'
 
+  get 'arrived_picker' => 'home#arrived_picker'
+
+  get 'arrived_client' => 'home#arrived_client'
+
   post 'take_service' => 'home#take_service'
+
+  get 'service_taken' => 'home#service_taken'
 
   get 'profiles/:id' => 'profiles#show', as: :profile
   

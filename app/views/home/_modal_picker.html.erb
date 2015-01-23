@@ -1,4 +1,4 @@
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="pickingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -9,8 +9,8 @@
         <p><strong><%= @trip.picker.user.username %></strong> the person who needs you to pick them up is <strong><%= @trip.user.username %></strong>. They will be waiting for you!</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        <!-- <button type="button" class="btn btn-default" data-dismiss="modal"></button> -->
+        <%= link_to 'Arrived', arrived_picker_path(trip_id: @trip.id), class:"btn btn-primary", id:"arrived-btn" %>
       </div>
     </div>
   </div>

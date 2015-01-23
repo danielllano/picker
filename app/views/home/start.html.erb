@@ -6,7 +6,7 @@
     <div id="loading">
       <img src="http://www.webdesign.org/img_articles/13053/loading-gif-animation.gif" alt="loading" />
     </div>
-    
+
     <div class="address-box">
       <!-- <div class="form-group">
         <%#= f.collection_select(:city_id , @cities, :id, :name, {:prompt => false}, options = {class:"form-control"}) %>
@@ -44,9 +44,45 @@
   initialize();
   <% if current_user.picker.nil? %>
     setDirections();
+    var pusher = new Pusher('1f87a37925b6e3e22e89');
+    var channel = pusher.subscribe('active_trips');
+
+    channel.bind('taken-trip', function(trip) {
+      if (<%= current_user.id %> == trip.user_id) {
+        $.get("/service_taken", { trip_id: trip.trip_id }, function(){ console.log("message sent") })
+      }
+    });
+
+    channel.bind('arrived-trip', function(trip) {
+      console.log(trip);
+      if (<%= current_user.id %> == trip.user_id) {
+        $.get("/arrived_client", { trip_id: trip.trip_id }, function(){ console.log("message sent") })
+        }
+    });
+
+
   <% else %>
     var services = <%= @trips.to_json.html_safe %>;
     showServices(services);
+    
+    var pusher = new Pusher('1f87a37925b6e3e22e89');
+    var channel = pusher.subscribe('active_trips');
+    
+    channel.bind('new-trip', function(trip) {
+      console.log(trip);
+      showService(trip);
+    });
+
+    channel.bind('taken-trip', function(trip) {
+      console.log(trip);
+      clearOneMarker(trip);
+    });
+
+    channel.bind('delete-trip', function(trip) {
+      console.log(trip);
+      deleteOneMarker(trip);
+    });
   <% end %>
+
 </script>
 

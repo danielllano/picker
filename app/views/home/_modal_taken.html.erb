@@ -1,12 +1,14 @@
-<div class="modal fade" id="waitingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="takenModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Finding Picker</h4>
+        <h4 class="modal-title" id="myModalLabel">Picker heading your position</h4>
       </div>
       <div class="modal-body">
-        <p><strong><%= @trip.user.username %></strong>, we are looking for a Picker to drive you home. You will be notified as soon as we get you one!</p>
+        <p><strong><%= @trip.user.username %></strong>, your Picker's name is <strong><%= @trip.picker.user.username %></strong> and is their way to Pick you up.
+        <p>We'll notify you as soon as they arrive.</p>
+        <p>Be ready!</p>
       </div>
       <div class="modal-footer">
         <%= link_to 'Cancel Request', cancel_trip_path, data: { confirm: "Are you sure?" },class:"btn btn-default" %>
