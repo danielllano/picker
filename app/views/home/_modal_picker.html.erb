@@ -9,8 +9,8 @@
         <p><strong><%= @trip.picker.user.username %></strong> the person who needs you to pick them up is <strong><%= @trip.user.username %></strong>. They will be waiting for you!</p>
       </div>
       <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-default" data-dismiss="modal"></button> -->
-        <%= link_to 'Arrived', arrived_picker_path(trip_id: @trip.id), class:"btn btn-primary", id:"arrived-btn" %>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <%#= link_to 'Arrived', arrived_picker_path(trip_id: @trip.id), class:"btn btn-primary", id:"arrived-btn" %>
       </div>
     </div>
   </div>
