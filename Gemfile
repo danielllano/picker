@@ -15,6 +15,7 @@ gem 'autoprefixer-rails'
 gem 'font-awesome-sass'
 gem 'geocoder'
 gem 'devise'
+gem 'pusher'
 
 
 group :development, :test do

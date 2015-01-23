@@ -25,5 +25,6 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
   has_and_belongs_to_many :vehicles
   has_many :locations
+  has_many :trips
   has_one :picker
 end

@@ -105,5 +105,13 @@ body {
   margin-bottom: 0px;
 }
 
-
+#loading {
+  position: absolute;
+  background-color: #000000;
+  opacity: 0.8;
+  padding: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  display: none;
+}
 

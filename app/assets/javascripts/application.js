@@ -16,6 +16,8 @@
 //= require turbolinks
 //= require_tree .
 
+var pusher = new Pusher('1f87a37925b6e3e22e89');
+var channel = pusher.subscribe('active_trips');
 var geocoder;
 var map;
 var infowindow = new google.maps.InfoWindow();
@@ -128,7 +130,7 @@ function setDirections() {
     pos1 = markers[0].position;
 
     map.fitBounds(bounds);
-    map.setZoom(18);
+    map.setZoom(17);
   });
   // [END region_getplaces]
 
@@ -181,7 +183,8 @@ function setDirections() {
 
     pos2 = markers[0].position;
 
-    //map.fitBounds(bounds);
+    map.fitBounds(bounds);
+    map.setZoom(17);
   });
   
   google.maps.event.addListener(map, 'bounds_changed', function() {
@@ -388,6 +391,10 @@ $(document).on("page:change", function(){
     map.setCenter(myPos);
     $('.address-box').removeClass('show').addClass('hide');
   });
+});
 
+channel.bind('trips-change', function(trip) {
+  console.log('Real time');
+  showService(trip);
 });
 

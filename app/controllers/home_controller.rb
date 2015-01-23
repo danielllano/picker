@@ -20,6 +20,7 @@ class HomeController < ApplicationController
     @trip.dest_lat = params[:destLat]
     @trip.dest_lng = params[:destLng]
     @trip.save
+    Pusher.trigger('active_trips', 'trips-change', { trip_id: @trip.id, origin_lat: @trip.origin_lat, origin_lng: @trip.origin_lng, dest_lat: @trip.dest_lat, dest_lng: @trip.dest_lng } )
   end
 
   def take_service
@@ -27,6 +28,14 @@ class HomeController < ApplicationController
     @trip.taken = true
     @trip.picker_id = current_user.picker.id
     @trip.save
+    Pusher.trigger('active_trips', 'trips-change', { trip_id: trip.id, origin_lat: trip.origin_lat, origin_lng: trip.origin_lng, dest_lat: trip.dest_lat, dest_lng: trip.dest_lng } )
+  end
+
+  def cancel_trip
+    @trip = current_user.trips.last
+    @trip.destroy
+    redirect_to root_path
+    Pusher.trigger('active_trips', 'trips-change', { trip_id: trip.id, origin_lat: trip.origin_lat, origin_lng: trip.origin_lng, dest_lat: trip.dest_lat, dest_lng: trip.dest_lng } )
   end
 
   private
