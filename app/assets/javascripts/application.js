@@ -272,7 +272,7 @@ function showService(service) {
       $.get("/arrived_picker", { trip_id: service.trip_id }, function(){ console.log("done") });
     });
     $('.calcs').on('click', '#endService-btn', function(){
-      $.get("/", function(){console.log("end") });
+      window.location = '/start'
     });
   });
 }
